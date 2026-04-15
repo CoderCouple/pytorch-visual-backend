@@ -7,7 +7,11 @@ app = FastAPI(title="PyTorch Visual API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://frontend-rho-beryl-35.vercel.app",
+        "https://pytorch-visual.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

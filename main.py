@@ -11,6 +11,7 @@ app.add_middleware(
         "http://localhost:3000",
         "https://frontend-rho-beryl-35.vercel.app",
         "https://pytorch-visual.vercel.app",
+        "https://frontend-sunil-tiwaris-projects-27f9c87f.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

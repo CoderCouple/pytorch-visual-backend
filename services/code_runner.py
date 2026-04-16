@@ -2,6 +2,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 import io
 import contextlib
 from typing import Any
@@ -34,6 +35,8 @@ def run_user_code(code: str) -> dict[str, Any]:
         "torch": torch,
         "nn": nn,
         "F": F,
+        "np": np,
+        "numpy": np,
     }
 
     stdout_capture = io.StringIO()
@@ -48,7 +51,7 @@ def run_user_code(code: str) -> dict[str, Any]:
     # Collect all tensor variables from namespace
     tensors: dict[str, Any] = {}
     for name, val in namespace.items():
-        if name.startswith("_") or name in ("torch", "nn", "F"):
+        if name.startswith("_") or name in ("torch", "nn", "F", "np", "numpy"):
             continue
         if isinstance(val, torch.Tensor):
             t_dict = tensor_to_dict(val)

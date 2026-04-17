@@ -48,7 +48,7 @@ def run_user_code(code: str) -> dict[str, Any]:
     except Exception as e:
         error_msg = f"{type(e).__name__}: {e}"
 
-    # Collect all tensor variables from namespace
+    # Collect all tensor/array variables from namespace
     tensors: dict[str, Any] = {}
     for name, val in namespace.items():
         if name.startswith("_") or name in ("torch", "nn", "F", "np", "numpy"):
@@ -56,6 +56,14 @@ def run_user_code(code: str) -> dict[str, Any]:
         if isinstance(val, torch.Tensor):
             t_dict = tensor_to_dict(val)
             t_dict["name"] = name
+            tensors[name] = t_dict
+        elif isinstance(val, np.ndarray):
+            t_dict = {
+                "data": val.tolist(),
+                "shape": list(val.shape),
+                "dtype": str(val.dtype),
+                "name": name,
+            }
             tensors[name] = t_dict
 
     # Build step-by-step from the code lines

@@ -136,11 +136,16 @@ def _add(params: dict) -> dict:
 
 # --- Linear Algebra ---
 
+def _round(v: float, digits: int = 6) -> float:
+    """Round a float to avoid float32 noise like 0.30000000447034836."""
+    return round(v, digits)
+
+
 def _matmul(params: dict) -> dict:
     a_data = params.get("a", [[1, 2], [3, 4]])
     b_data = params.get("b", [[5, 6], [7, 8]])
-    a = torch.tensor(a_data, dtype=torch.float32)
-    b = torch.tensor(b_data, dtype=torch.float32)
+    a = torch.tensor(a_data, dtype=torch.float64)
+    b = torch.tensor(b_data, dtype=torch.float64)
 
     steps = [
         {"title": "Input A", "description": f"Matrix A with shape {list(a.shape)}", "output": tensor_to_dict(a)},
@@ -153,14 +158,14 @@ def _matmul(params: dict) -> dict:
     if a.dim() == 2 and b.dim() == 2:
         for i in range(a.shape[0]):
             for j in range(b.shape[1]):
-                row = a[i].tolist()
-                col = b[:, j].tolist()
-                products = [a[i][k].item() * b[k][j].item() for k in range(a.shape[1])]
+                row = [_round(v) for v in a[i].tolist()]
+                col = [_round(v) for v in b[:, j].tolist()]
+                products = [_round(a[i][k].item() * b[k][j].item()) for k in range(a.shape[1])]
                 intermediates.append({
                     "row": i, "col": j,
                     "row_values": row, "col_values": col,
                     "products": products,
-                    "sum": result[i][j].item(),
+                    "sum": _round(result[i][j].item()),
                 })
 
     steps.append({
